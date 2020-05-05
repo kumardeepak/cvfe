@@ -8,7 +8,6 @@ import Grid from "@material-ui/core/Grid";
 import Select from "./SelectItems";
 import axios from "axios";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import ImageGallery from "react-image-gallery";
 import ViewData from "./ViewData";
 
 const styles = () => ({
@@ -58,6 +57,13 @@ class Content extends Component {
     });
   }
 
+  handleBack() {
+    this.setState({
+      openDropzone: false,
+      files: [],
+    });
+  }
+
   handleSubmit(e) {
     e.preventDefault();
     if (!this.state.openDropzone && this.state.source) {
@@ -65,6 +71,7 @@ class Content extends Component {
         openDropzone: true,
       });
     } else if (this.state.files.length > 0) {
+        console.log("files",this.state.files)
       this.setState({
         showLoader: true,
       });
@@ -73,15 +80,24 @@ class Content extends Component {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-          timeout: 30000,
+          timeout: 15000,
         })
         .then((res) => {
           this.setState({
             showLoader: false,
             resData: res.data.filepath,
             showView: true,
+            
           });
-          console.log(res.data.filepath)
+          console.log(this.state.files);
+        })
+        .catch(error => {
+            
+            this.setState({
+                showLoader: false, 
+                
+              });
+              alert("Something Went wrong. please reload again..!")
         });
     } else {
       alert("Filed shouldn't be empty");
@@ -93,20 +109,23 @@ class Content extends Component {
   };
 
   handleChange = (files) => {
+      var a = files;
     if (files.length > 0) {
       this.readFileDataAsBinary(files[0]).then((result, err) => {
         this.setState({
           files: result,
+          inputFile: a
         });
       });
     }
   };
   render() {
+    let gridValue = this.state.openDropzone ? 5 : 12;
     return (
-      <div>
+      <div style={{marginTop:'8%'}}>
         {this.state.showLoader ? (
           <CircularProgress style={{ marginTop: "20%" }} />
-        ) : !this.state.showView ? 
+        ) : !this.state.showView ? (
           <Paper className={this.props.classes.paper}>
             <Grid item xs={12} sm={12} lg={12} xl={12}>
               <Typography
@@ -116,13 +135,13 @@ class Content extends Component {
               >
                 {this.state.source && this.state.openDropzone
                   ? this.state.source
-                  : "Image Processing"}
+                  : "Computer Vision Demonstration"}
               </Typography>
               <br />
               <br />
             </Grid>
             {!this.state.openDropzone ? (
-              <Grid container style={{ marginLeft: "12%" }}>
+              <Grid container style={{ marginLeft: "14%" }}>
                 <Grid item xs={12} sm={5} lg={5} xl={5}>
                   <Typography
                     gutterBottom
@@ -130,7 +149,7 @@ class Content extends Component {
                     component="h2"
                     style={{ width: "100%", paddingTop: "50px" }}
                   >
-                    Please select item :
+                    Select demonstration category:
                   </Typography>
                   <br />
                 </Grid>
@@ -138,9 +157,9 @@ class Content extends Component {
                 <Grid
                   item
                   xs={12}
-                  sm={2}
-                  lg={4}
-                  xl={4}
+                  sm={5}
+                  lg={5}
+                  xl={5}
                   style={{ marginBottom: "20px" }}
                 >
                   <br />
@@ -164,20 +183,49 @@ class Content extends Component {
                 dropzoneText={"Drag and drop a image here or click"}
               ></DropzoneArea>
             )}
-            <Button
-              style={{ marginLeft: "2%" }}
-              variant="contained"
-              color="primary"
-              className={this.props.classes.button}
-              size="large"
-              onClick={this.handleSubmit.bind(this)}
-            >
-              <b>{this.state.openDropzone ? "SUBMIT" : "NEXT"}</b>
-            </Button>
+
+            <Grid container>
+              {this.state.openDropzone && (
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  lg={6}
+                  xl={6}
+                  style={{ marginBottom: "20px", width: "100%" }}
+                >
+                  <Button
+                    style={{ marginLeft: "1%" }}
+                    variant="contained"
+                    color="primary"
+                    className={this.props.classes.button}
+                    size="large"
+                    onClick={this.handleBack.bind(this)}
+                  >
+                    <b>back</b>
+                  </Button>
+                </Grid>
+              )}
+
+              <Grid item xs={12} sm={gridValue} lg={gridValue} xl={gridValue}>
+                <Button
+                  style={{ marginLeft: "1%" }}
+                  variant="contained"
+                  color="primary"
+                  className={this.props.classes.button}
+                  size="large"
+                  onClick={this.handleSubmit.bind(this)}
+                >
+                  <b>{this.state.openDropzone ? "SUBMIT" : "NEXT"}</b>
+                </Button>
+              </Grid>
+            </Grid>
 
             <br />
           </Paper>
-         :  <ViewData filePath ={this.state.resData}/>}
+        ) : (
+          <ViewData filePath={this.state.resData} file ={this.state.inputFile}/>
+        )}
       </div>
     );
   }

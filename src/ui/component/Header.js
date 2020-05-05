@@ -1,20 +1,14 @@
 import React from 'react';
-import clsx from 'clsx';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-
-import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import history from "../../web.history";
 
 const drawerWidth = 240;
-const drawerData = ['Scan Documents']
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
@@ -78,27 +72,9 @@ const useStyles = makeStyles(theme => ({
 
 export default function PersistentDrawerLeft() {
   const classes = useStyles();
-  const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
-  const [clicked, setClicked] = React.useState(false)
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const openP = Boolean(anchorEl);
-
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClickEvent = () => {
-    setClicked(true)
-  }
-
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
-
-  const handleMenu = event => {
-    setAnchorEl(event.currentTarget);
-  };
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -109,15 +85,13 @@ export default function PersistentDrawerLeft() {
       <CssBaseline />
       <AppBar
         position="fixed"
-        className={clsx(classes.appBar, {
-          [classes.appBarShift]: open,
-        })}
+       
       >
         <Toolbar style={{paddingLeft:'50px'}}>
           
           
           <Typography variant="h6" noWrap>
-            Image processing
+          Computer Vision Demonstration
           </Typography>
           <section className={classes.rightToolbar}>
            
@@ -151,12 +125,7 @@ export default function PersistentDrawerLeft() {
         </Toolbar>
       </AppBar>
       
-      <main
-        className={clsx(classes.content, {
-          [classes.contentShift]: open,
-        })}
-      >
-      </main>
+     
     </div>
   );
 }
