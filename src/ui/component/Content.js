@@ -44,16 +44,13 @@ class Content extends Component {
   readFileDataAsBinary(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
-
       reader.onload = (event) => {
         resolve(event.target.result);
       };
-
       reader.onerror = (err) => {
         reject(err);
       };
-
-      reader.readAsText(file, "UTF8");
+      reader.readAsArrayBuffer(file);
     });
   }
 
@@ -70,7 +67,7 @@ class Content extends Component {
       this.setState({
         openDropzone: true,
       });
-    } else if (this.state.files.length > 0) {
+    } else if (this.state.files) {
         console.log("files",this.state.files)
       this.setState({
         showLoader: true,
@@ -85,7 +82,7 @@ class Content extends Component {
         .then((res) => {
 
             axios
-        .post("http://52.11.90.50/food/api/v1/rect/recipe", {"image_file_id":"0008848385"},  {
+        .post("http://52.11.90.50/food/api/v1/rect/recipe", {"image_file_id":res.data.filepath},  {
             headers: {
               "Content-Type": "application/json",
             },
@@ -103,8 +100,7 @@ class Content extends Component {
       .catch(error => {
             
         this.setState({
-            showLoader: false, 
-            showView: true,
+            showLoader: false
             
           });
           alert("Something Went wrong. please reload again..!")

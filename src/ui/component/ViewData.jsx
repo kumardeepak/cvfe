@@ -30,7 +30,8 @@ class ViewData extends Component {
               <img src= {URL.createObjectURL(this.props.file[0])}  style={{maxWidth: "100%",
         maxHeight: "70vh",
         display: "block",
-        block: 'center'}} alt=""/>
+  marginLeft: "auto",
+  marginRight: "auto"}} alt=""/>
               {/* <Image 
         src= {URL.createObjectURL(this.props.file[0])}
       /> */}
