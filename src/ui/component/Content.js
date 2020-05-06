@@ -83,13 +83,33 @@ class Content extends Component {
           timeout: 15000,
         })
         .then((res) => {
-          this.setState({
+
+            axios
+        .post("http://52.11.90.50/food/api/v1/rect/recipe", {"image_file_id":"0008848385"},  {
+            headers: {
+              "Content-Type": "application/json",
+            },
+            timeout: 15000,
+          })
+      .then(res => {
+        const imageDetails = res.data;
+        this.setState({ imageDetails,
             showLoader: false,
-            resData: res.data.filepath,
+            resData: res.data.recipe_name,
+            showView: true,
+         });
+      })
+
+      .catch(error => {
+            
+        this.setState({
+            showLoader: false, 
             showView: true,
             
           });
-          console.log(this.state.files);
+          alert("Something Went wrong. please reload again..!")
+    });
+          
         })
         .catch(error => {
             
@@ -224,7 +244,7 @@ class Content extends Component {
             <br />
           </Paper>
         ) : (
-          <ViewData filePath={this.state.resData} file ={this.state.inputFile}/>
+          <ViewData fileDetails={this.state.resData} file ={this.state.inputFile}/>
         )}
       </div>
     );

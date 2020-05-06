@@ -37,35 +37,7 @@ class ViewData extends Component {
                   </Grid>
                   <Grid item xs={12} sm={6} lg={6} xl={6} style={{width:'100%'}}>
                   <JSONViewer
-        json={ [
-            {
-              "_id": "5eb120a28fb9f85beae099a5",
-              "align": "CENTER",
-              "is_new_line": true,
-              "is_bold": true,
-              "text": "REPORTABLE",
-            },
-            {
-                "_id": "5eb120a28fb9f85beae099a5",
-                "align": "CENTER",
-                "is_new_line": true,
-                "is_bold": true,
-                "text": "REPORTABLE",
-              },
-              {
-                "_id": "5eb120a28fb9f85beae099a5",
-                "align": "CENTER",
-                "is_new_line": true,
-                "is_bold": true,
-                "text": "REPORTABLE",
-              },
-              {
-                "_id": "5eb120a28fb9f85beae099a5",
-                "align": "CENTER",
-                "is_new_line": true,
-                "is_bold": true,
-                "text": "REPORTABLE",
-              }]}
+        json= { this.props.fileDetails}
       />
                   </Grid>
                   </Grid>
