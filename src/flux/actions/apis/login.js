@@ -29,7 +29,7 @@ export default class LoginAPI extends API {
   }
 
   apiEndPoint() {
-    return `http://poc1.tarento.ai/api/v1/user/login`;
+    return `https://demo-ai-api.tarento.com/api/v1/user/login`;
   }
 
   getBody() {

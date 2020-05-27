@@ -102,7 +102,7 @@ if(["video/mp4","video/MPEG4"].includes(this.state.type)){
 }
     this.setState({image_file_id:'',video_file_id:''})
     axios
-        .post("http://poc1.tarento.ai/api/v1/face/"+apiEndpoint, items , {
+        .post("https://demo-ai-api.tarento.com/api/v1/face/"+apiEndpoint, items , {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${decodeURI(localStorage.getItem("token"))}`
@@ -148,7 +148,7 @@ if(["video/mp4","video/MPEG4"].includes(this.state.type)){
         showLoader: true,
       });
       axios
-        .post("http://poc1.tarento.ai/upload", this.state.ImageFile, {
+        .post("https://demo-ai-api.tarento.com/upload", this.state.ImageFile, {
           headers: {
             "Content-Type": "multipart/form-data",
             
@@ -181,7 +181,8 @@ if(["video/mp4","video/MPEG4"].includes(this.state.type)){
         showLoader: true,
       });
       axios
-        .post("http://poc1.tarento.ai/upload", this.state.videoFile, {
+      
+        .post("https://demo-ai-api.tarento.com/upload", this.state.videoFile, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
