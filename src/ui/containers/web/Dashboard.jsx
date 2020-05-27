@@ -43,7 +43,6 @@ class Content extends Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    console.log(this.state.source)
     if (this.state.source==="Detect Recipe") {
       history.push("/detect-recipe")
     }

@@ -62,7 +62,6 @@ class Recipe extends Component {
   handleSubmit(e) {
     e.preventDefault();
     if (this.state.files) {
-        console.log("files",this.state.files)
       this.setState({
         showLoader: true,
       });

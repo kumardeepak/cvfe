@@ -8,7 +8,7 @@ class SimpleSelect extends React.Component {
 
   render() {
     const { id, MenuItemValues, handleChange, value, name } = this.props;
-    console.log( this.props.MenuItemValues)
+
     return (
       <form>
         <FormControl>

@@ -57,7 +57,6 @@ class Recipe extends Component {
 
   handleVideoChange = files => {
     const a = files;
-    console.log(files[0].type)
     if (files.length > 0) {
       this.readFileDataAsBinary(files[0]).then((result, err) => {
         this.setState({
@@ -92,12 +91,10 @@ class Recipe extends Component {
     var apiEndpoint=''
     var items = {}
 if(["video/mp4","video/MPEG4"].includes(this.state.type)){
-  console.log("vee")
   apiEndpoint = "verify";
   items = {"image_file_id":image,"video_file_id":video}
 }else if(["image/jpeg","image/png"].includes(this.state.type)){
   apiEndpoint = "compare";
-  console.log("vcom")
   items = {"source_file_id":image, "target_file_id":video}
 }
     this.setState({image_file_id:'',video_file_id:''})
@@ -113,8 +110,6 @@ if(["video/mp4","video/MPEG4"].includes(this.state.type)){
         const imageDetails = res.data;
         var diff1 = new Date(res.data.rsp.session.ended).getTime();
         var diff2 = new Date(res.data.rsp.session.started).getTime();
-        
-        console.log(diff1-diff2)
         this.setState({ imageDetails,
             showLoader: false,
             resData:{"Session ID": res.data.rsp.session.id,"Face verified" : res.data.rsp.face.found,"Time taken": Math.round((diff1-diff2)/1000)+' '+"sec"},
@@ -176,7 +171,6 @@ if(["video/mp4","video/MPEG4"].includes(this.state.type)){
     
     
     if (this.state.videoFile) {
-        console.log("files",this.state.videoFile)
       this.setState({
         showLoader: true,
       });

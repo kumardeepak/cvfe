@@ -8,7 +8,6 @@ export default class ConfigUpload extends API {
     this.file = configFile;
     this.name = name;
 
-    console.log(this.file,this.name)
   }
 
   toString() {

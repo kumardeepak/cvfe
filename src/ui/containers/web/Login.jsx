@@ -51,7 +51,10 @@ class Login extends React.Component {
 
     const apiObj = new LoginAPI(email, password);
     APITransporter(apiObj);
-    this.setState({ showLoader: true });
+    this.setState({ showLoader: true, InvalidPassword: false });
+    setTimeout(() => {
+      this.setState({ showLoader: false})
+    }, 60000);
   };
 
   componentDidUpdate(prevProps) {
