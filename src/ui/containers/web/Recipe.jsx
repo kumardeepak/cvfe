@@ -5,7 +5,6 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
-import Select from "../../components/web/common/SelectItems";
 import axios from "axios";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import ViewData from "./ViewData";
@@ -132,7 +131,6 @@ class Recipe extends Component {
     }
   };
   render() {
-    let gridValue = this.state.openDropzone ? 5 : 12;
     return (
       <div style={{marginTop:'8%'}}>
         {this.state.showLoader ? (

@@ -7,10 +7,10 @@ import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Select from "../../components/web/common/SelectItems";
 import axios from "axios";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import ViewData from "./ViewData";
 import history from "../../../web.history";
 import { blueGrey50 } from "material-ui/styles/colors";
+import Spinner from "../../components/web/common/Spinner";
 
 const styles = () => ({
   paper: {
@@ -45,7 +45,6 @@ class Recipe extends Component {
 
   handleImageChange = files => {
     const a = files;
-    console.log("files------",files[0])
     if (files.length > 0) {
       this.readFileDataAsBinary(files[0]).then((result, err) => {
         this.setState({
@@ -58,17 +57,21 @@ class Recipe extends Component {
 
   handleVideoChange = files => {
     const a = files;
+    console.log(files[0].type)
     if (files.length > 0) {
       this.readFileDataAsBinary(files[0]).then((result, err) => {
         this.setState({
           videoFile: result,
-          inputVideo: a
+          inputVideo: a,
+          type:files[0].type
         });
       });
     }
   };
 
   readFileDataAsBinary(file) {
+    
+    
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = (event) => {
@@ -86,22 +89,35 @@ class Recipe extends Component {
   }
 
   handleVideoUpload(image,video){
-
-
+    var apiEndpoint=''
+    var items = {}
+if(["video/mp4","video/MPEG4"].includes(this.state.type)){
+  console.log("vee")
+  apiEndpoint = "verify";
+  items = {"image_file_id":image,"video_file_id":video}
+}else if(["image/jpeg","image/png"].includes(this.state.type)){
+  apiEndpoint = "compare";
+  console.log("vcom")
+  items = {"source_file_id":image, "target_file_id":video}
+}
     this.setState({image_file_id:'',video_file_id:''})
     axios
-        .post("http://poc1.tarento.ai/api/v1/face/verify", {"image_file_id":image,"video_file_id":video} , {
+        .post("http://poc1.tarento.ai/api/v1/face/"+apiEndpoint, items , {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${decodeURI(localStorage.getItem("token"))}`
             },
-            timeout: 15000,
+            timeout: 60000,
           })
       .then(res => {
         const imageDetails = res.data;
+        var diff1 = new Date(res.data.rsp.session.ended).getTime();
+        var diff2 = new Date(res.data.rsp.session.started).getTime();
+        
+        console.log(diff1-diff2)
         this.setState({ imageDetails,
             showLoader: false,
-            resData:{"Face verified" : res.data.rsp.face.found,"Time taken": res.data.rsp.session.started+' - '+res.data.rsp.session.ended},
+            resData:{"Session ID": res.data.rsp.session.id,"Face verified" : res.data.rsp.face.found,"Time taken": Math.round((diff1-diff2)/1000)+' '+"sec"},
             showView: true,
          });
       })
@@ -118,6 +134,7 @@ class Recipe extends Component {
           }
           else{
             alert("Processing failed. please try again..!")
+            window.location.reload()
           }
     });
 
@@ -136,7 +153,7 @@ class Recipe extends Component {
             "Content-Type": "multipart/form-data",
             
           },
-          timeout: 15000,
+          timeout: 60000,
         })
         .then((res) => {
             this.setState({"image_file_id":res.data.filepath})
@@ -168,7 +185,7 @@ class Recipe extends Component {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-          timeout: 15000,
+          timeout: 58000,
         })
         .then((res) => {
             this.setState({"video_file_id":res.data.filepath})
@@ -211,9 +228,7 @@ class Recipe extends Component {
     const gridValue = this.state.openDropzone ? 5 : 12;
     return (
       <div style={{ marginTop: "8%" }}>
-        {this.state.showLoader ? (
-          <CircularProgress style={{ marginTop: "18%", marginLeft: "50%" }} />
-        ) : !this.state.showView ? (
+        { !this.state.showView ? (
           <Paper className={this.props.classes.paper}>
             <Grid item xs={12} sm={12} lg={12} xl={12}>
               <Typography
@@ -222,14 +237,14 @@ class Recipe extends Component {
                 component="h2"
                 style={{
                   marginTop: "-.7%",
-                  paddingLeft: "40%",
+                  paddingLeft: "38%",
                   background: blueGrey50,
                   paddingTop: "25px",
                   paddingBottom: "16px"
                 }}
               >
                 {" "}
-                Detect Face
+                Detect and Verify Face
               </Typography>
               <br />
               <br />
@@ -241,16 +256,17 @@ class Recipe extends Component {
                   acceptedFiles={["image/jpeg","image/png"]}
                   onChange={this.handleImageChange.bind(this)}
                   filesLimit={1}
-                  dropzoneText="Drag an image ID here or click"
+                  dropzoneText="Drop an image ID here or click"
                 />
               </Grid>
               <Grid item xs={12} sm={5} lg={5} xl={5}>
                 <DropzoneArea
                   showPreviewsInDropzone
-                  acceptedFiles={["video/mp4","video/MPEG4"]}
+                  acceptedFiles={["video/mp4","video/MPEG4","image/jpeg","image/png"]}
                   onChange={this.handleVideoChange.bind(this)}
+                  maxFileSize={8000000}
                   filesLimit={1}
-                  dropzoneText="Drop a video here or click"
+                  dropzoneText="Drop a video/image here or click"
                 />
               </Grid>
             </Grid>
@@ -288,6 +304,10 @@ class Recipe extends Component {
         ) : (
           <ViewData fileDetails={this.state.resData} file={this.state.inputImage} />
         )}
+
+{this.state.showLoader && (
+          <Spinner />
+        ) }
       </div>
     );
   }

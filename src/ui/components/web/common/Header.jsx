@@ -2,21 +2,14 @@ import React from 'react';
 // import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import classNames from 'classnames';
-import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import history from "../../../../web.history";
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import { menuFolderListItems, otherMenuFolderListItems } from './tileData';
 
 const styles = {
 	root: {
@@ -55,7 +48,7 @@ class Header extends React.Component {
 	};
 
 	render() {
-		const { classes, theme } = this.props;
+		const { classes} = this.props;
 		const { auth, anchorEl, open } = this.state;
 		const openEl = Boolean(anchorEl);
 
@@ -76,19 +69,13 @@ class Header extends React.Component {
               paddingTop: "25px",
               paddingBottom: "8px"
             }}
-          > Computer Vision Demonstration
+          > Tarento.ai demonstration
               </Typography>
-						
-
-						
-          
-          
-         
 						{auth && (
 							<div>
 								<IconButton size="medium" style={{
               
-              marginRight: "30%",fontSize:'24px'
+              marginRight: "30px",fontSize:'24px'
               
               
              

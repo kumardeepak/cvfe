@@ -1,12 +1,10 @@
 import React, { Component } from "react";
-import { DropzoneArea } from "material-ui-dropzone";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Select from "../../components/web/common/SelectItems";
-import axios from "axios";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import ViewData from "./ViewData";
 import history from "../../../web.history";
@@ -90,7 +88,7 @@ class Content extends Component {
               paddingTop: "25px",
               paddingBottom: "16px"
             }}
-          > Computer Vision Demonstration
+          >  Computer Vision Demonstration
               </Typography>
                   
               <br />

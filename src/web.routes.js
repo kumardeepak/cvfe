@@ -24,7 +24,10 @@ class AppRoutes extends React.Component {
      if (user.token || token) {
       return true;
      }
-     <Redirect to={`/`} />
+     else{
+      <Redirect to={{ pathname: "/" }} />
+     }
+     
    };
 
   render() {

@@ -12,7 +12,6 @@ import { bindActionCreators } from "redux";
 import { withRouter } from "react-router-dom";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { blueGrey50 } from "material-ui/styles/colors";
-import Select from "../../components/web/common/SelectItems";
 import ViewData from "./ViewData";
 import history from "../../../web.history";
 import Upload from "../../../flux/actions/apis/upload";
@@ -116,7 +115,7 @@ class Face extends Component {
   };
 
   render() {
-    const gridValue = this.state.openDropzone ? 5 : 12;
+
     return (
       <div style={{ marginTop: "8%" }}>
         {this.state.showLoader ? (
