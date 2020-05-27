@@ -112,7 +112,13 @@ class Recipe extends Component {
             
           });
           
-          alert("error")
+          if(error=="Error: Request failed with status code 401"){
+            alert("Login expired. Please login again..!")
+            history.push('/')
+          }
+          else{
+            alert("Processing failed. please try again..!")
+          }
     });
 
       
