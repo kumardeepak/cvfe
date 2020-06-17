@@ -112,7 +112,7 @@ if(["video/mp4","video/MPEG4"].includes(this.state.type)){
         var diff2 = new Date(res.data.rsp.session.started).getTime();
         this.setState({ imageDetails,
             showLoader: false,
-            resData:{"Session ID": res.data.rsp.session.id,"Face verified" : res.data.rsp.face.found,"Time taken": Math.round((diff1-diff2)/1000)+' '+"sec"},
+            resData:res.data.rsp.face.distance!==undefined ? {"Session ID": res.data.rsp.session.id,"Face verified" : res.data.rsp.face.found,"Time taken": Math.round((diff1-diff2)/1000)+' '+"sec",  "Distance":res.data.rsp.face.distance  }: {"Session ID": res.data.rsp.session.id,"Face verified" : res.data.rsp.face.found,"Time taken": Math.round((diff1-diff2)/1000)+' '+"sec"  },
             showView: true,
          });
       })
