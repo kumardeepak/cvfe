@@ -49,7 +49,8 @@ class Recipe extends Component {
       this.readFileDataAsBinary(files[0]).then((result, err) => {
         this.setState({
           ImageFile: result,
-          inputImage: a
+          inputImage: a,
+          iFile: files
         });
       });
     }
@@ -62,7 +63,8 @@ class Recipe extends Component {
         this.setState({
           videoFile: result,
           inputVideo: a,
-          type:files[0].type
+          type:files[0].type,
+          vFile: files
         });
       });
     }
@@ -90,14 +92,14 @@ class Recipe extends Component {
   handleVideoUpload(image,video){
     var apiEndpoint=''
     var items = {}
-if(["video/mp4","video/MPEG4"].includes(this.state.type)){
+if(["video/mp4","video/MPEG4","video/webm"].includes(this.state.type)){
   apiEndpoint = "verify";
   items = {"image_file_id":image,"video_file_id":video}
 }else if(["image/jpeg","image/png"].includes(this.state.type)){
   apiEndpoint = "compare";
   items = {"source_file_id":image, "target_file_id":video}
 }
-    this.setState({image_file_id:'',video_file_id:''})
+    
     axios
         .post("https://demo-ai-api.tarento.com/api/v1/face/"+apiEndpoint, items , {
             headers: {
@@ -112,7 +114,7 @@ if(["video/mp4","video/MPEG4"].includes(this.state.type)){
         var diff2 = new Date(res.data.rsp.session.started).getTime();
         this.setState({ imageDetails,
             showLoader: false,
-            resData:res.data.rsp.face.distance!==undefined ? {"Session ID": res.data.rsp.session.id,"Face verified" : res.data.rsp.face.found,"Time taken": Math.round((diff1-diff2)/1000)+' '+"sec",  "Distance":res.data.rsp.face.distance  }: {"Session ID": res.data.rsp.session.id,"Face verified" : res.data.rsp.face.found,"Time taken": Math.round((diff1-diff2)/1000)+' '+"sec"  },
+            resData:res.data.rsp.face.distance!==undefined && res.data.rsp.face.distance!==null ? {"Session ID": res.data.rsp.session.id,"Face verified" : res.data.rsp.face.found,"Time taken": Math.round((diff1-diff2)/1000)+' '+"sec",  "Distance":res.data.rsp.face.distance  }: {"Session ID": res.data.rsp.session.id,"Face verified" : res.data.rsp.face.found,"Time taken": Math.round((diff1-diff2)/1000)+' '+"sec"  },
             showView: true,
          });
       })
@@ -137,21 +139,29 @@ if(["video/mp4","video/MPEG4"].includes(this.state.type)){
   }
 
   handleSubmit(e) {
+    console.log(this.state.iFile)
     e.preventDefault();
     if (this.state.ImageFile) {
       this.setState({
         showLoader: true,
       });
+      const formData = new FormData();
+        formData.append('file',this.state.iFile[0])
+        
+      
       axios
-        .post("https://demo-ai-api.tarento.com/upload", this.state.ImageFile, {
+        .post("https://demo-ai-api.tarento.com/api/v1/file/upload", formData, {
           headers: {
-            "Content-Type": "multipart/form-data",
             
+            'Accept': '*/*',
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${decodeURI(localStorage.getItem("token"))}`
+             
           },
           timeout: 60000,
         })
         .then((res) => {
-            this.setState({"image_file_id":res.data.filepath})
+            this.setState({"image_file_id":res.data.rsp.filename})
             if(this.state.image_file_id && this.state.video_file_id){
                 this.handleVideoUpload(this.state.image_file_id,this.state.video_file_id)
             }
@@ -162,7 +172,9 @@ if(["video/mp4","video/MPEG4"].includes(this.state.type)){
                 showLoader: false, 
                 
               });
-              alert("Image upload failed. please try again..!")
+
+             
+              
         });
         
     }else {
@@ -170,20 +182,26 @@ if(["video/mp4","video/MPEG4"].includes(this.state.type)){
       }
     
     
-    if (this.state.videoFile) {
+    if (this.state.vFile) {
       this.setState({
         showLoader: true,
       });
+      const formData2 = new FormData();
+        formData2.append('file',this.state.vFile[0])
       axios
       
-        .post("https://demo-ai-api.tarento.com/upload", this.state.videoFile, {
+        .post("https://demo-ai-api.tarento.com/api/v1/file/upload", formData2, {
           headers: {
-            "Content-Type": "multipart/form-data",
+            'Accept': '*/*',
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${decodeURI(localStorage.getItem("token"))}`
+            
+           
           },
           timeout: 58000,
         })
         .then((res) => {
-            this.setState({"video_file_id":res.data.filepath})
+            this.setState({"video_file_id":res.data.rsp.filename})
             if(this.state.image_file_id && this.state.video_file_id){
                 this.handleVideoUpload(this.state.image_file_id,this.state.video_file_id)
             }
@@ -194,7 +212,15 @@ if(["video/mp4","video/MPEG4"].includes(this.state.type)){
                 showLoader: false, 
                 
               });
-              alert("Video upload failed. please reload again..!")
+
+              if(error=="Error: Request failed with status code 401"){
+                alert("Login expired. Please login again..!")
+                history.push('/')
+              }
+              else{
+                alert("Video upload failed. please reload again..!")
+              }
+             
         });
         
     }else {
@@ -257,7 +283,7 @@ if(["video/mp4","video/MPEG4"].includes(this.state.type)){
               <Grid item xs={12} sm={5} lg={5} xl={5}>
                 <DropzoneArea
                   showPreviewsInDropzone
-                  acceptedFiles={["video/mp4","video/MPEG4","image/jpeg","image/png"]}
+                  acceptedFiles={["video/mp4","video/MPEG4","image/jpeg","image/png",,"video/webm"]}
                   onChange={this.handleVideoChange.bind(this)}
                   maxFileSize={8000000}
                   filesLimit={1}
