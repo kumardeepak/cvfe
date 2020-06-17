@@ -114,7 +114,7 @@ if(["video/mp4","video/MPEG4","video/webm"].includes(this.state.type)){
         var diff2 = new Date(res.data.rsp.session.started).getTime();
         this.setState({ imageDetails,
             showLoader: false,
-            resData:res.data.rsp.face.distance!==undefined && res.data.rsp.face.distance!==null ? {"Session ID": res.data.rsp.session.id,"Face verified" : res.data.rsp.face.found,"Time taken": Math.round((diff1-diff2)/1000)+' '+"sec",  "Distance":res.data.rsp.face.distance  }: {"Session ID": res.data.rsp.session.id,"Face verified" : res.data.rsp.face.found,"Time taken": Math.round((diff1-diff2)/1000)+' '+"sec"  },
+            resData:res.data.rsp.face.distance!==undefined && res.data.rsp.face.distance!==null ? {"Session ID": res.data.rsp.session.id,"Face verified" : res.data.rsp.face.found,"Time taken": Math.round((diff1-diff2)/1000)+' '+"sec",  "Distance":Number((res.data.rsp.face.distance).toFixed(2)) }: {"Session ID": res.data.rsp.session.id,"Face verified" : res.data.rsp.face.found,"Time taken": Math.round((diff1-diff2)/1000)+' '+"sec"  },
             showView: true,
          });
       })
