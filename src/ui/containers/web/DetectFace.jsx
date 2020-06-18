@@ -92,15 +92,15 @@ class Recipe extends Component {
   handleVideoUpload(image,video){
     var apiEndpoint=''
     var items = {}
-if(["video/mp4","video/MPEG4","video/webm"].includes(this.state.type)){
+if(["video/mp4","video/webm"].includes(this.state.mime)){
   apiEndpoint = "verify";
   items = {"image_file_id":image,"video_file_id":video}
-}else if(["image/jpeg","image/png"].includes(this.state.type)){
+}else if(["image/jpeg","image/png"].includes(this.state.mime)){
   apiEndpoint = "compare";
   items = {"source_file_id":image, "target_file_id":video}
 }
-    
-    axios
+    if(apiEndpoint){
+      axios
         .post("https://demo-ai-api.tarento.com/api/v1/face/"+apiEndpoint, items , {
             headers: {
               "Content-Type": "application/json",
@@ -134,6 +134,8 @@ if(["video/mp4","video/MPEG4","video/webm"].includes(this.state.type)){
             window.location.reload()
           }
     });
+    }
+    
 
       
   }
@@ -161,8 +163,10 @@ if(["video/mp4","video/MPEG4","video/webm"].includes(this.state.type)){
           timeout: 60000,
         })
         .then((res) => {
+          console.log("log----",res.data.rsp)
             this.setState({"image_file_id":res.data.rsp.filename})
             if(this.state.image_file_id && this.state.video_file_id){
+              
                 this.handleVideoUpload(this.state.image_file_id,this.state.video_file_id)
             }
         })
@@ -201,7 +205,8 @@ if(["video/mp4","video/MPEG4","video/webm"].includes(this.state.type)){
           timeout: 58000,
         })
         .then((res) => {
-            this.setState({"video_file_id":res.data.rsp.filename})
+          console.log("log",res.data.rsp)
+            this.setState({"video_file_id":res.data.rsp.filename, mime:res.data.rsp.mime})
             if(this.state.image_file_id && this.state.video_file_id){
                 this.handleVideoUpload(this.state.image_file_id,this.state.video_file_id)
             }
@@ -283,7 +288,7 @@ if(["video/mp4","video/MPEG4","video/webm"].includes(this.state.type)){
               <Grid item xs={12} sm={5} lg={5} xl={5}>
                 <DropzoneArea
                   showPreviewsInDropzone
-                  acceptedFiles={["video/mp4","video/MPEG4","image/jpeg","image/png",,"video/webm"]}
+                  acceptedFiles={["video/mp4","video/MPEG4","image/jpeg","image/png","video/webm"]}
                   onChange={this.handleVideoChange.bind(this)}
                   maxFileSize={8000000}
                   filesLimit={1}
