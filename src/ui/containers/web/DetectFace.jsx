@@ -16,7 +16,9 @@ const styles = () => ({
   myDropZone:{
     marginLeft:'15%',
     width: "90%",
-    '& img ':{minWidth:'100px'} 
+    '& img ':{minWidth:'100px'},
+    '& svg ':{minWidth:'100px'}
+  
   },
   
   
@@ -299,7 +301,6 @@ if(["video/mp4","video/webm"].includes(this.state.mime)){
               <Grid item xs={12} sm={5} lg={5} xl={5}>
                 <DropzoneArea
                 dropZoneClass ={this.props.classes.myDropZone}
-                
                   showPreviewsInDropzone
                   acceptedFiles={["video/mp4","video/WEBM","image/jpeg","image/png","video/webm"]}
                   onChange={this.handleVideoChange.bind(this)}
