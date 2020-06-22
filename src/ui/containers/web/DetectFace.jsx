@@ -13,12 +13,20 @@ import { blueGrey50 } from "material-ui/styles/colors";
 import Spinner from "../../components/web/common/Spinner";
 
 const styles = () => ({
+  myDropZone:{
+    marginLeft:'15%',
+    width: "90%",
+    '& img ':{minWidth:'100px'} 
+  },
+  
+  
   paper: {
     margin: "25%",
     width: "50%",
-    minWidth: "20%",
+    
     marginTop: "5%",
     padding: "2%",
+
   },
   typography: {
     textAlign: "center",
@@ -26,10 +34,14 @@ const styles = () => ({
   },
   button: {
     marginTop: "4%",
-    marginLeft: "20%",
-    width: "60%",
+    marginLeft: "15%",
+    
   },
+ 
+  
+  
 });
+
 class Recipe extends Component {
   constructor() {
     super();
@@ -141,7 +153,6 @@ if(["video/mp4","video/webm"].includes(this.state.mime)){
   }
 
   handleSubmit(e) {
-    console.log(this.state.iFile)
     e.preventDefault();
     if (this.state.ImageFile) {
       this.setState({
@@ -163,7 +174,6 @@ if(["video/mp4","video/webm"].includes(this.state.mime)){
           timeout: 60000,
         })
         .then((res) => {
-          console.log("log----",res.data.rsp)
             this.setState({"image_file_id":res.data.rsp.filename})
             if(this.state.image_file_id && this.state.video_file_id){
               
@@ -205,7 +215,6 @@ if(["video/mp4","video/webm"].includes(this.state.mime)){
           timeout: 58000,
         })
         .then((res) => {
-          console.log("log",res.data.rsp)
             this.setState({"video_file_id":res.data.rsp.filename, mime:res.data.rsp.mime})
             if(this.state.image_file_id && this.state.video_file_id){
                 this.handleVideoUpload(this.state.image_file_id,this.state.video_file_id)
@@ -263,7 +272,7 @@ if(["video/mp4","video/webm"].includes(this.state.mime)){
                 component="h2"
                 style={{
                   marginTop: "-.7%",
-                  paddingLeft: "38%",
+                  textAlign:'center',
                   background: blueGrey50,
                   paddingTop: "25px",
                   paddingBottom: "16px"
@@ -275,9 +284,11 @@ if(["video/mp4","video/webm"].includes(this.state.mime)){
               <br />
               <br />
             </Grid>
-            <Grid container style={{ marginLeft: "5%" }} spacing={10}>
+            <Grid container style={{ marginTop: "3%", marginLeft: "2%" }}>
               <Grid item xs={12} sm={5} lg={5} xl={5} style={{ marginBottom: "20px", width: "90%" }}>
                 <DropzoneArea
+                  dropZoneClass ={this.props.classes.myDropZone}
+                  
                   showPreviewsInDropzone
                   acceptedFiles={["image/jpeg","image/png"]}
                   onChange={this.handleImageChange.bind(this)}
@@ -287,8 +298,10 @@ if(["video/mp4","video/webm"].includes(this.state.mime)){
               </Grid>
               <Grid item xs={12} sm={5} lg={5} xl={5}>
                 <DropzoneArea
+                dropZoneClass ={this.props.classes.myDropZone}
+                
                   showPreviewsInDropzone
-                  acceptedFiles={["video/mp4","video/MPEG4","image/jpeg","image/png","video/webm"]}
+                  acceptedFiles={["video/mp4","video/WEBM","image/jpeg","image/png","video/webm"]}
                   onChange={this.handleVideoChange.bind(this)}
                   maxFileSize={8000000}
                   filesLimit={1}
