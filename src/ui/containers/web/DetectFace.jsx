@@ -13,22 +13,25 @@ import { blueGrey50 } from "material-ui/styles/colors";
 import Spinner from "../../components/web/common/Spinner";
 
 const styles = () => ({
-  myDropZone:{
-    marginLeft:'15%',
+  myDropZone: {
+    marginLeft: "15%",
     width: "90%",
-    '& img ':{minWidth:'100px'},
-    '& svg ':{minWidth:'100px'}
-  
+    "& img ": { minWidth: "100px" },
+    "& svg ": { minWidth: "100px" },
+    "& p": {
+      textOverflow: "ellipsis",
+      whiteSpace: "nowrap",
+      overflow: "hidden",
+      fontSize: "19px",
+    },
   },
-  
-  
+
   paper: {
     margin: "25%",
     width: "50%",
-    minWidth:'150px',
+    minWidth: "150px",
     marginTop: "5%",
     padding: "2%",
-
   },
   typography: {
     textAlign: "center",
@@ -37,11 +40,7 @@ const styles = () => ({
   button: {
     marginTop: "4%",
     marginLeft: "15%",
-    
   },
- 
-  
-  
 });
 
 class Recipe extends Component {
@@ -57,36 +56,34 @@ class Recipe extends Component {
     };
   }
 
-  handleImageChange = files => {
+  handleImageChange = (files) => {
     const a = files;
     if (files.length > 0) {
       this.readFileDataAsBinary(files[0]).then((result, err) => {
         this.setState({
           ImageFile: result,
           inputImage: a,
-          iFile: files
+          iFile: files,
         });
       });
     }
   };
 
-  handleVideoChange = files => {
+  handleVideoChange = (files) => {
     const a = files;
     if (files.length > 0) {
       this.readFileDataAsBinary(files[0]).then((result, err) => {
         this.setState({
           videoFile: result,
           inputVideo: a,
-          type:files[0].type,
-          vFile: files
+          type: files[0].type,
+          vFile: files,
         });
       });
     }
   };
 
   readFileDataAsBinary(file) {
-    
-    
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = (event) => {
@@ -100,58 +97,74 @@ class Recipe extends Component {
   }
 
   handleBack() {
-    history.push('/dashboard')
+    history.push("/dashboard");
   }
 
-  handleVideoUpload(image,video){
-    var apiEndpoint=''
-    var items = {}
-if(["video/mp4","video/webm"].includes(this.state.mime)){
-  apiEndpoint = "verify";
-  items = {"image_file_id":image,"video_file_id":video}
-}else if(["image/jpeg","image/png"].includes(this.state.mime)){
-  apiEndpoint = "compare";
-  items = {"source_file_id":image, "target_file_id":video}
-}
-    if(apiEndpoint){
+  handleVideoUpload(image, video) {
+    var apiEndpoint = "";
+    var items = {};
+    if (["video/mp4", "video/webm"].includes(this.state.mime)) {
+      apiEndpoint = "verify";
+      items = { image_file_id: image, video_file_id: video };
+    } else if (["image/jpeg", "image/png"].includes(this.state.mime)) {
+      apiEndpoint = "compare";
+      items = { source_file_id: image, target_file_id: video };
+    }
+    if (apiEndpoint) {
       axios
-        .post("https://demo-ai-api.tarento.com/api/v1/face/"+apiEndpoint, items , {
+        .post(
+          "https://demo-ai-api.tarento.com/api/v1/face/" + apiEndpoint,
+          items,
+          {
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${decodeURI(localStorage.getItem("token"))}`
+              Authorization: `Bearer ${decodeURI(
+                localStorage.getItem("token")
+              )}`,
             },
             timeout: 60000,
-          })
-      .then(res => {
-        const imageDetails = res.data;
-        var diff1 = new Date(res.data.rsp.session.ended).getTime();
-        var diff2 = new Date(res.data.rsp.session.started).getTime();
-        this.setState({ imageDetails,
+          }
+        )
+        .then((res) => {
+          const imageDetails = res.data;
+          var diff1 = new Date(res.data.rsp.session.ended).getTime();
+          var diff2 = new Date(res.data.rsp.session.started).getTime();
+          this.setState({
+            imageDetails,
             showLoader: false,
-            resData:res.data.rsp.face.distance!==undefined && res.data.rsp.face.distance!==null ? {"Session ID": res.data.rsp.session.id,"Face verified" : res.data.rsp.face.found,"Time taken": Math.round((diff1-diff2)/1000)+' '+"sec",  "Distance":Number((res.data.rsp.face.distance).toFixed(2)) }: {"Session ID": res.data.rsp.session.id,"Face verified" : res.data.rsp.face.found,"Time taken": Math.round((diff1-diff2)/1000)+' '+"sec"  },
+            resData:
+              res.data.rsp.face.distance !== undefined &&
+              res.data.rsp.face.distance !== null
+                ? {
+                    "Session ID": res.data.rsp.session.id,
+                    "Face verified": res.data.rsp.face.found,
+                    "Time taken":
+                      Math.round((diff1 - diff2) / 1000) + " " + "sec",
+                    Distance: Number(res.data.rsp.face.distance.toFixed(2)),
+                  }
+                : {
+                    "Session ID": res.data.rsp.session.id,
+                    "Face verified": res.data.rsp.face.found,
+                    "Time taken":
+                      Math.round((diff1 - diff2) / 1000) + " " + "sec",
+                  },
             showView: true,
-         });
-      })
-      .catch(error => {
-            
-        this.setState({
-            showLoader: false, 
-            
           });
-          
-          if(error=="Error: Request failed with status code 401"){
-            alert("Login expired. Please login again..!")
-            history.push('/')
-          }
-          else{
-            alert("Processing failed. please try again..!")
-            window.location.reload()
-          }
-    });
-    }
-    
+        })
+        .catch((error) => {
+          this.setState({
+            showLoader: false,
+          });
 
-      
+          if (error == "Error: Request failed with status code 401") {
+            alert("Login expired. Please login again..!");
+            history.push("/");
+          } else {
+            alert("Processing failed. please try again..!");
+            window.location.reload();
+          }
+        });
+    }
   }
 
   handleSubmit(e) {
@@ -161,102 +174,91 @@ if(["video/mp4","video/webm"].includes(this.state.mime)){
         showLoader: true,
       });
       const formData = new FormData();
-        formData.append('file',this.state.iFile[0])
-        
-      
+      formData.append("file", this.state.iFile[0]);
+
       axios
         .post("https://demo-ai-api.tarento.com/api/v1/file/upload", formData, {
           headers: {
-            
-            'Accept': '*/*',
-            'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer ${decodeURI(localStorage.getItem("token"))}`
-             
+            Accept: "*/*",
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${decodeURI(localStorage.getItem("token"))}`,
           },
           timeout: 60000,
         })
         .then((res) => {
-            this.setState({"image_file_id":res.data.rsp.filename})
-            if(this.state.image_file_id && this.state.video_file_id){
-              
-                this.handleVideoUpload(this.state.image_file_id,this.state.video_file_id)
-            }
+          this.setState({ image_file_id: res.data.rsp.filename });
+          if (this.state.image_file_id && this.state.video_file_id) {
+            this.handleVideoUpload(
+              this.state.image_file_id,
+              this.state.video_file_id
+            );
+          }
         })
-        .catch(error => {
-            
-            this.setState({
-                showLoader: false, 
-                
-              });
-
-             
-              
+        .catch((error) => {
+          this.setState({
+            showLoader: false,
+          });
         });
-        
-    }else {
-        alert("File shouldn't be empty");
-      }
-    
-    
+    } else {
+      alert("File shouldn't be empty");
+    }
+
     if (this.state.vFile) {
       this.setState({
         showLoader: true,
       });
       const formData2 = new FormData();
-        formData2.append('file',this.state.vFile[0])
+      formData2.append("file", this.state.vFile[0]);
       axios
-      
+
         .post("https://demo-ai-api.tarento.com/api/v1/file/upload", formData2, {
           headers: {
-            'Accept': '*/*',
-            'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer ${decodeURI(localStorage.getItem("token"))}`
-            
-           
+            Accept: "*/*",
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${decodeURI(localStorage.getItem("token"))}`,
           },
           timeout: 58000,
         })
         .then((res) => {
-            this.setState({"video_file_id":res.data.rsp.filename, mime:res.data.rsp.mime})
-            if(this.state.image_file_id && this.state.video_file_id){
-                this.handleVideoUpload(this.state.image_file_id,this.state.video_file_id)
-            }
+          this.setState({
+            video_file_id: res.data.rsp.filename,
+            mime: res.data.rsp.mime,
+          });
+          if (this.state.image_file_id && this.state.video_file_id) {
+            this.handleVideoUpload(
+              this.state.image_file_id,
+              this.state.video_file_id
+            );
+          }
         })
-        .catch(error => {
-            
-            this.setState({
-                showLoader: false, 
-                
-              });
+        .catch((error) => {
+          this.setState({
+            showLoader: false,
+          });
 
-              if(error=="Error: Request failed with status code 401"){
-                alert("Login expired. Please login again..!")
-                history.push('/')
-              }
-              else{
-                alert("Video upload failed. please reload again..!")
-              }
-             
+          if (error == "Error: Request failed with status code 401") {
+            alert("Login expired. Please login again..!");
+            history.push("/");
+          } else {
+            alert("Video upload failed. please reload again..!");
+          }
         });
-        
-    }else {
+    } else {
       alert("File shouldn't be empty");
     }
-
   }
 
   handleSelectChange = (event) => {
     this.setState({ [event.target.name]: event.target.value, model: [] });
-    
   };
 
   handleChange = (files) => {
-      var a = files;
+    var a = files;
     if (files.length > 0) {
       this.readFileDataAsBinary(files[0]).then((result, err) => {
         this.setState({
           files: result,
-          inputFile: a
+          inputFile: a,
         });
       });
     }
@@ -265,7 +267,7 @@ if(["video/mp4","video/webm"].includes(this.state.mime)){
     const gridValue = this.state.openDropzone ? 5 : 12;
     return (
       <div style={{ marginTop: "8%" }}>
-        { !this.state.showView ? (
+        {!this.state.showView ? (
           <Paper className={this.props.classes.paper}>
             <Grid item xs={12} sm={12} lg={12} xl={12}>
               <Typography
@@ -274,10 +276,10 @@ if(["video/mp4","video/webm"].includes(this.state.mime)){
                 component="h2"
                 style={{
                   marginTop: "-.7%",
-                  textAlign:'center',
+                  textAlign: "center",
                   background: blueGrey50,
                   paddingTop: "25px",
-                  paddingBottom: "16px"
+                  paddingBottom: "16px",
                 }}
               >
                 {" "}
@@ -287,12 +289,18 @@ if(["video/mp4","video/webm"].includes(this.state.mime)){
               <br />
             </Grid>
             <Grid container style={{ marginTop: "3%", marginLeft: "2%" }}>
-              <Grid item xs={12} sm={5} lg={5} xl={5} style={{ marginBottom: "20px", width: "90%" }}>
+              <Grid
+                item
+                xs={12}
+                sm={5}
+                lg={5}
+                xl={5}
+                style={{ marginBottom: "20px", width: "90%" }}
+              >
                 <DropzoneArea
-                  dropZoneClass ={this.props.classes.myDropZone}
-                  
+                  dropZoneClass={this.props.classes.myDropZone}
                   showPreviewsInDropzone
-                  acceptedFiles={["image/jpeg","image/png"]}
+                  acceptedFiles={["image/jpeg", "image/png"]}
                   onChange={this.handleImageChange.bind(this)}
                   filesLimit={1}
                   dropzoneText="Drop an image ID here or click"
@@ -300,19 +308,32 @@ if(["video/mp4","video/webm"].includes(this.state.mime)){
               </Grid>
               <Grid item xs={12} sm={5} lg={5} xl={5}>
                 <DropzoneArea
-                dropZoneClass ={this.props.classes.myDropZone}
+                  dropZoneClass={this.props.classes.myDropZone}
                   showPreviewsInDropzone
-                  acceptedFiles={["video/mp4","video/WEBM","image/jpeg","image/png","video/webm"]}
+                  acceptedFiles={[
+                    "video/mp4",
+                    "video/WEBM",
+                    "image/jpeg",
+                    "image/png",
+                    "video/webm",
+                  ]}
                   onChange={this.handleVideoChange.bind(this)}
                   maxFileSize={8000000}
                   filesLimit={1}
-                  dropzoneText="Drop a video/ image here or click"
+                  dropzoneText="Drop an image/video here or click"
                 />
               </Grid>
             </Grid>
 
             <Grid container style={{ marginTop: "3%", marginLeft: "2%" }}>
-              <Grid item xs={12} sm={5} lg={5} xl={5} style={{ marginBottom: "20px", width: "90%" }}>
+              <Grid
+                item
+                xs={12}
+                sm={5}
+                lg={5}
+                xl={5}
+                style={{ marginBottom: "20px", width: "90%" }}
+              >
                 <Button
                   style={{ width: "90%" }}
                   variant="contained"
@@ -342,16 +363,21 @@ if(["video/mp4","video/webm"].includes(this.state.mime)){
             <br />
           </Paper>
         ) : (
-          <ViewData fileDetails={this.state.resData} file={this.state.inputImage} file2={["video/mp4","video/webm"].includes(this.state.mime)?"":this.state.inputVideo}/>
+          <ViewData
+            fileDetails={this.state.resData}
+            file={this.state.inputImage}
+            file2={
+              ["video/mp4", "video/webm"].includes(this.state.mime)
+                ? ""
+                : this.state.inputVideo
+            }
+          />
         )}
 
-{this.state.showLoader && (
-          <Spinner />
-        ) }
+        {this.state.showLoader && <Spinner />}
       </div>
     );
   }
 }
 
 export default withStyles(styles)(Recipe);
-

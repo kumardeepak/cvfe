@@ -64,7 +64,7 @@ class Header extends React.Component {
             component="h2"
             style={{
               marginTop: "-.7%",
-              paddingLeft: "40%",
+              textAlign:'center',
               
               paddingTop: "25px",
               paddingBottom: "8px"

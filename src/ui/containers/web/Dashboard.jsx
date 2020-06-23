@@ -82,7 +82,8 @@ class Content extends Component {
             component="h2"
             style={{
               marginTop: "-.7%",
-              paddingLeft: "32%",
+              textAlign: "center",
+              
               background: blueGrey50,
               paddingTop: "25px",
               paddingBottom: "16px"
