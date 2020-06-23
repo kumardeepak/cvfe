@@ -25,7 +25,7 @@ const styles = () => ({
   paper: {
     margin: "25%",
     width: "50%",
-    
+    minWidth:'150px',
     marginTop: "5%",
     padding: "2%",
 
@@ -306,7 +306,7 @@ if(["video/mp4","video/webm"].includes(this.state.mime)){
                   onChange={this.handleVideoChange.bind(this)}
                   maxFileSize={8000000}
                   filesLimit={1}
-                  dropzoneText="Drop a video/image here or click"
+                  dropzoneText="Drop a video/ image here or click"
                 />
               </Grid>
             </Grid>
@@ -342,7 +342,7 @@ if(["video/mp4","video/webm"].includes(this.state.mime)){
             <br />
           </Paper>
         ) : (
-          <ViewData fileDetails={this.state.resData} file={this.state.inputImage} />
+          <ViewData fileDetails={this.state.resData} file={this.state.inputImage} file2={["video/mp4","video/webm"].includes(this.state.mime)?"":this.state.inputVideo}/>
         )}
 
 {this.state.showLoader && (
