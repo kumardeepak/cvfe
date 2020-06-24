@@ -16,13 +16,18 @@ const styles = () => ({
   myDropZone: {
     marginLeft: "15%",
     width: "90%",
+    borderColor:'#1C9AB7',
+    backgroundColor: '#F5F9FA',
+    border: '1px dashed #1C9AB7',
+    fontColor:'#1C9AB7',
+    "& svg ": { minWidth: "100px",color:'#1C9AB7' },
     "& img ": { minWidth: "100px" },
-    "& svg ": { minWidth: "100px" },
     "& p": {
       textOverflow: "ellipsis",
       whiteSpace: "nowrap",
       overflow: "hidden",
       fontSize: "19px",
+      color:'#1C9AB7'
     },
   },
 
