@@ -49,6 +49,9 @@ class Content extends Component {
     else if (this.state.source==="Detect Face") {
       history.push("/detect-face")
     }
+    else if (this.state.source==="Detect PAN") {
+      history.push("/detect-pan")
+    }
   }
 
 
@@ -121,7 +124,7 @@ class Content extends Component {
                   <Select
                     id="outlined-age-simple"
                     selectValue="language_code"
-                    MenuItemValues={["Detect Face","Detect Recipe", "Detect Aadhaar"]}
+                    MenuItemValues={["Detect Face", "Detect PAN","Detect Recipe","Detect AAdhaar"]}
                     handleChange={this.handleSelectChange}
                     value={this.state.source}
                     name="source"

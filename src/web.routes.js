@@ -11,6 +11,7 @@ import Dashboard from "./ui/containers/web/Dashboard";
 import Recipe from "./ui/containers/web/Recipe";
 import Aadhar from "./ui/containers/web/Aadhaar";
 import DetectFace from "./ui/containers/web/DetectFace";
+import DetectPan from "./ui/containers/web/DetectPan";
 import history from "./web.history";
 
 const PrivateRoute = ({ component: Component, authenticate, ...rest }) => (
@@ -40,6 +41,7 @@ class AppRoutes extends React.Component {
             <PrivateRoute path="/detect-recipe" component={Recipe} authenticate={this.authenticateUser()} />
             <PrivateRoute path="/detect-aadhaar" component={Aadhar} authenticate={this.authenticateUser()} />
             <PrivateRoute path="/detect-face" component={DetectFace} authenticate={this.authenticateUser()} />
+            <PrivateRoute path="/detect-pan" component={DetectPan} authenticate={this.authenticateUser()} />
             <PrivateRoute path="/*" component={NotFound} authenticate={this.authenticateUser()} />
           </Switch>
         </div>
