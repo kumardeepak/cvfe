@@ -43,14 +43,14 @@ const styles = () => ({
     },
     button: {
       marginTop: "4%",
-      marginLeft: "15%",
+      marginLeft: "19%",
     },
   });
 class DetectPan extends Component {
   constructor() {
     super();
     this.state = {
-      files: [],
+      inputFile: [],
       showComponent: false,
       openDropzone: false,
       showLoader: false,
@@ -78,34 +78,43 @@ class DetectPan extends Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    if (this.state.files) {
+    if (this.state.inputFile) {
+        const formData = new FormData();
+      formData.append("file", this.state.inputFile[0]);
       this.setState({
         showLoader: true,
       });
       axios
-        .post("http://52.11.90.50/upload", this.state.files, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          timeout: 15000,
-        })
+      .post("https://demo-ai-api.tarento.com/api/v1/file/upload", formData, {
+        headers: {
+          Accept: "*/*",
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${decodeURI(localStorage.getItem("token"))}`,
+        },
+        timeout: 60000,
+      })
         .then((res) => {
-            alert("Still in progress")
-        //     axios
-        // .post("http://52.11.90.50/food/api/v1/rect/recipe", {"image_file_id":res.data.filepath},  {
-        //     headers: {
-        //       "Content-Type": "application/json",
-        //     },
-        //     timeout: 15000,
-        //   })
-    //   .then(res => {
-    //     const imageDetails = res.data;
-    //     this.setState({ imageDetails,
-    //         showLoader: false,
-    //         resData: res.data.recipe_name,
-    //         showView: true,
-    //      });
-    //   })
+            console.log(res)
+            // alert("Still in progress")
+            axios
+        .post("https://demo-ai-api.tarento.com/api/v1/card/detect", {"image_file":res.data.rsp.filename},  {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${decodeURI(localStorage.getItem("token"))}`,
+            },
+            timeout: 15000,
+          })
+      .then(res => {
+         
+        const imageDetails = res.data.rsp.card;
+        imageDetails["Time Taken"]=res.data.rsp.session.time_taken
+       
+        this.setState({ imageDetails,
+            showLoader: false,
+            resData: imageDetails,
+            showView: true
+         });
+      })
 
       .catch(error => {
             
@@ -113,7 +122,13 @@ class DetectPan extends Component {
             showLoader: false
             
           });
-          alert("Something Went wrong. please reload again..!")
+          if (error == "Error: Request failed with status code 401") {
+            alert("Login expired. Please login again..!");
+            history.push("/");
+          } else {
+            alert("Processing failed. please try again..!");
+            window.location.reload();
+          }
     });
           
         })
@@ -123,7 +138,13 @@ class DetectPan extends Component {
                 showLoader: false, 
                 
               });
-              alert("Something Went wrong. please reload again..!")
+              if (error == "Error: Request failed with status code 401") {
+                alert("Login expired. Please login again..!");
+                history.push("/");
+              } else {
+                alert("Processing failed. please try again..!");
+                window.location.reload();
+              }
         });
     } else {
       alert("Filed shouldn't be empty");
@@ -177,7 +198,7 @@ class DetectPan extends Component {
                   acceptedFiles={["image/jpeg", "image/png"]}
                   onChange={this.handleChange.bind(this)}
                   filesLimit={1}
-                  dropzoneText="Drop an image here or click"
+                  dropzoneText="Drop a PAN card image here or click"
                 />
               
         

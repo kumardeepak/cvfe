@@ -12,10 +12,28 @@ import history from "../../../web.history";
 import { blueGrey50 } from "material-ui/styles/colors";
 
 const styles = () => ({
+  myDropZone: {
+    marginLeft: "5%",
+    width: "90%",
+    borderColor:'#1C9AB7',
+    backgroundColor: '#F5F9FA',
+    border: '1px dashed #1C9AB7',
+    fontColor:'#1C9AB7',
+    "& svg ": { minWidth: "100px",color:'#1C9AB7' },
+    "& img ": { minWidth: "100px" },
+    "& p": {
+      textOverflow: "ellipsis",
+      whiteSpace: "nowrap",
+      overflow: "hidden",
+      fontSize: "19px",
+      color:'#1C9AB7'
+    },
+  },
+
   paper: {
     margin: "25%",
     width: "50%",
-    minWidth: "20%",
+    minWidth: "150px",
     marginTop: "5%",
     padding: "2%",
   },
@@ -25,8 +43,7 @@ const styles = () => ({
   },
   button: {
     marginTop: "4%",
-    marginLeft: "20%",
-    width: "60%",
+    marginLeft: "19%",
   },
 });
 class Recipe extends Component {
@@ -155,6 +172,7 @@ class Recipe extends Component {
             </Grid>
             
             <DropzoneArea
+               dropZoneClass={this.props.classes.myDropZone}
                 showPreviewsInDropzone={true}
                 acceptedFiles={["image/jpeg", "image/png", "image/bmp"]}
                 onChange={this.handleChange.bind(this)}
